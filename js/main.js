@@ -8,7 +8,7 @@ const rowCount = 500;
 
 function defineValues(value){
   databaseValues = value;
-  maxRowCount = Object.size(value.dataModel.data);
+  maxRowCount = Object.size(value.data);
 
   // drawCanvas(currentRowValues)
   drawTable()
@@ -47,7 +47,7 @@ async function drawCanvas(currentRowValue) {
   inside += '<caption style="display: none">This table is created in canvas by SVG and JavaScript</caption>';
   inside += '<thead><tr>';
 
-  for (let x = 1; x < Object.size(databaseValues.dataModel.data[0]) - 1; x++) {
+  for (let x = 1; x < Object.size(databaseValues.data[0]) - 1; x++) {
     inside += "<th style='" +
       "text-align: center;" +
       "min-width: 4em;" +
@@ -67,9 +67,9 @@ async function drawCanvas(currentRowValue) {
     canvas.height = canvas.height - 0.64;
 
     inside += "<tr>";
-    let columnValue = databaseValues.dataModel.data[i];
+    let columnValue = databaseValues.data[i];
 
-    for (let j = 2; j < Object.size(databaseValues.dataModel.data[i]); j++) {
+    for (let j = 2; j < Object.size(databaseValues.data[i]); j++) {
       inside += "" +
         "<td style='" +
         "text-align: center;" +
@@ -149,7 +149,7 @@ function drawTable() {
   let thead = document.createElement('thead');
 
   let rowHead = document.createElement('tr');
-  for (let x = 1; x < Object.size(databaseValues.dataModel.data[0]) - 1; x++) {
+  for (let x = 1; x < Object.size(databaseValues.data[0]) - 1; x++) {
     let columnHead = document.createElement('th');
     columnHead.append('value' + x)
     rowHead.append(columnHead);
@@ -159,9 +159,9 @@ function drawTable() {
 
   for (let i = 0; i < rowCount; i++) { //TODO změnit hodnotu 10 řádků na celý počet řádků 'rowCount'
     let row = document.createElement('tr');
-    let columnValue = databaseValues.dataModel.data[i];
+    let columnValue = databaseValues.data[i];
 
-    for (let j = 2; j < Object.size(databaseValues.dataModel.data[i]); j++) {
+    for (let j = 2; j < Object.size(databaseValues.data[i]); j++) {
       let column = document.createElement('td');
       if(j === 2)
         column.append(i+1 + '.) ');

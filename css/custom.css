@@ -1,38 +1,21 @@
-:root, html, body{
-  font-size: 16px;
-}
 html, body
 {
+  font-size: 16px;
   width:100%;
   height:100%;
   margin:0;
 }
 header h1{
-  /*padding: -20px;*/
-  /*margin: -20px;*/
   max-width: 100%;
   height: 10%;
   text-align: center;
   text-decoration: underline gray;
 }
-#tracking{
-  position: fixed;
-  top: 0;
-  right: 24px;
-  border: 1px solid red;
+#middle{
+  padding: 0;
+  margin: 0;
 }
-
-/*footer{*/
-/*  max-width: 100%;*/
-/*  height: 5%;*/
-/*  display: flex;*/
-/*  align-content: flex-end;*/
-/*  justify-content: flex-end;*/
-/*  padding-right: 0.5rem;*/
-/*  border: 5px solid blue;*/
-/*}*/
-
-#parent {
+.parent {
   max-width: 100%;
   height: 100%;
   border: 1px solid purple;
@@ -42,4 +25,11 @@ table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
   text-align: center;
+}
+
+#tracking{
+  position: fixed;
+  top: 0;
+  right: 24px;
+  border: 1px solid red;
 }

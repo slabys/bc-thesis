@@ -15,7 +15,7 @@
   <link rel="icon" href="./img/icon.png">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="css/custom.css">
+  <link rel="stylesheet" href="./css/custom.css">
 </head>
 <body>
 <header>
@@ -23,7 +23,7 @@
 </header>
 <section id="middle">
   <p id="tracking"></p><!--DELETE only for tracking height and scroll of document-->
-  <div id="parent">
+  <div class="parent">
     <!-- Tabulka, který je využíván při vykreslování tabulky do SVG metodou 'drawCanvas' -->
     <canvas
       id="canvas"
@@ -58,15 +58,12 @@
       .then(
         //model.gridConfig.sheets[0].dataModel.data
         model => {
-          model.gridConfig.sheets.forEach(value => {
-            defineValues(value);
-          });
+          console.log(model.gridConfig.sheets[0].dataModel)
+          defineValues(model.gridConfig.sheets[0].dataModel)
         }
       );
   }
 </script>
 <script src="js/main.js"></script>
-<!--<script type="text/javascript" src="data.json"></script>-->
 </body>
-
 </html>
