@@ -1,0 +1,14 @@
+# humanstxt.org/
+# The humans responsible & technology colophon
+
+# TEAM
+
+    <Slabý Šimon> -- <Developer> -- <MES, ai3-p>
+
+# THANKS
+
+    <Mgr. Daniela Ponce, Ph.D.>
+
+# TECHNOLOGY COLOPHON
+
+    HTML5, CSS3, JavaScript

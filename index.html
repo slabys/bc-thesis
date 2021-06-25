@@ -1,0 +1,72 @@
+<!doctype html>
+<html class="no-js" lang="cs">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="Rendering large amount of data on a website">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta property="og:title" content="MES">
+  <meta property="og:type" content="Semestral project">
+  <meta property="og:url" content="https://www.uhk.cz/cs/fakulta-informatiky-a-managementu/fim">
+  <meta property="og:image" content="https://www.uhk.cz/img/svg/logo/fim-uhk-cs_hor.svg">
+  <link rel="manifest" href="site.webmanifest">
+  <link rel="icon" href="./img/icon.png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+<header>
+  <h1>Vykreslování velkého objemu dat na webu</h1>
+</header>
+<section id="middle">
+  <p id="tracking"></p><!--DELETE only for tracking height and scroll of document-->
+  <div id="parent">
+    <!-- Tabulka, který je využíván při vykreslování tabulky do SVG metodou 'drawCanvas' -->
+    <canvas
+      id="canvas"
+      class="canvas"
+      width="100%"
+      height="100%"
+    ></canvas>
+  </div>
+</section>
+<!--Zápatí, které není zřejmě zapotřebí-->
+<!--  <footer>-->
+<!--    <span>&copy; 2021, Slabý Šimon</span>-->
+<!--  </footer>-->
+<script>
+  window.onload = function (){
+    getData();
+  }
+
+  /**
+   * Základ pro infinity scrolling
+   **/
+
+  /**
+   * Script, který zajištuje vykreslování tabulky za pomocí čtení dat z dokumentu JSON,
+   * JavaScriptem tvořící jednotlivé elementy webové stránky, do kterých jsou dotasovány data.
+   */
+  function getData() {
+    fetch("./data.json")
+      .then(response => {
+        return response.json();
+      })
+      .then(
+        //model.gridConfig.sheets[0].dataModel.data
+        model => {
+          model.gridConfig.sheets.forEach(value => {
+            defineValues(value);
+          });
+        }
+      );
+  }
+</script>
+<script src="js/main.js"></script>
+<!--<script type="text/javascript" src="data.json"></script>-->
+</body>
+
+</html>
