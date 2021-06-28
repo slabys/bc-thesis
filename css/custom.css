@@ -1,15 +1,24 @@
-html, body
-{
-  font-size: 16px;
+html, body {
   width:100%;
   height:100%;
   margin:0;
+  padding: 0;
 }
-header h1{
+header{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   max-width: 100%;
   height: 10%;
-  text-align: center;
+}
+header h1{
+  padding: 0 1em;
   text-decoration: underline gray;
+}
+header button{
+  width: 100px;
+  height: 25px;
+  margin: 2em;
 }
 #middle{
   padding: 0;
@@ -18,18 +27,19 @@ header h1{
 .parent {
   max-width: 100%;
   height: 100%;
-  border: 1px solid purple;
   overflow:auto;
 }
+#canvas{
+  display: none;
+}
 table, th, td {
+  max-width: 3.5em;
+  padding: 8px;
   border: 1px solid black;
   border-collapse: collapse;
   text-align: center;
 }
-
-#tracking{
-  position: fixed;
-  top: 0;
-  right: 24px;
-  border: 1px solid red;
+footer{
+  text-align: right;
+  padding: 0.3em;
 }

@@ -19,38 +19,28 @@
 </head>
 <body>
 <header>
+  <button type="button" onclick="drawTable()">Table</button>
   <h1>Vykreslování velkého objemu dat na webu</h1>
+  <button type="button" onclick="drawCanvas()">Canvas</button>
+  <button type="button" onclick="clean()">Clean</button>
+
+  </div>
 </header>
-<section id="middle">
-  <p id="tracking"></p><!--DELETE only for tracking height and scroll of document-->
+<section>
   <div class="parent">
-    <!-- Tabulka, který je využíván při vykreslování tabulky do SVG metodou 'drawCanvas' -->
     <canvas
       id="canvas"
-      class="canvas"
       width="100%"
       height="100%"
     ></canvas>
+    <div id="table"></div>
   </div>
 </section>
-<!--Zápatí, které není zřejmě zapotřebí-->
-<!--  <footer>-->
-<!--    <span>&copy; 2021, Slabý Šimon</span>-->
-<!--  </footer>-->
+  <footer>
+    <span>&copy; 2021, Slabý Šimon</span>
+  </footer>
 <script>
-  window.onload = function (){
-    getData();
-  }
-
-  /**
-   * Základ pro infinity scrolling
-   **/
-
-  /**
-   * Script, který zajištuje vykreslování tabulky za pomocí čtení dat z dokumentu JSON,
-   * JavaScriptem tvořící jednotlivé elementy webové stránky, do kterých jsou dotasovány data.
-   */
-  function getData() {
+  window.onload = function() {
     fetch("./data.json")
       .then(response => {
         return response.json();
