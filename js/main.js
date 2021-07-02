@@ -2,17 +2,17 @@
 
 let databaseValues;
 let maxRowCount = 0;
-const rowCount = 500;
+const rowCount = 1860;
 const columnCount = 18;
 
 function defineValues(value){
   databaseValues = value;
   maxRowCount = Object.size(value.data);
 
-  // drawCanvas()
+  drawCanvas()
   // drawTable()
 }
-//Infinite scroll start
+//Počátek funkce Infinite scroll start
 document.addEventListener('scroll', function (){
   let bottomScroll = window.scrollY + document.body.clientHeight-21;
 
@@ -37,7 +37,6 @@ function clean(){
  * do elementu canvas, který obsahuje element podporující vektorovou grafiku 'svg'
  **/
 function drawCanvas() {
-
   document.getElementById('canvas').style.setProperty('display', 'block')
 
   let canvas = document.getElementById('canvas');
@@ -148,7 +147,7 @@ Object.size = function (obj) {
  * ze souboru typu JSON
  **/
 function drawTable() {
-
+  startTime = new Date().getTime();
   let main = document.getElementById('table');
   let tbl = document.createElement('table');
 

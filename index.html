@@ -23,7 +23,6 @@
   <h1>Vykreslování velkého objemu dat na webu</h1>
   <button type="button" onclick="drawCanvas()">Canvas</button>
   <button type="button" onclick="clean()">Clean</button>
-
   </div>
 </header>
 <section>
@@ -40,7 +39,7 @@
     <span>&copy; 2021, Slabý Šimon</span>
   </footer>
 <script>
-  window.onload = function() {
+    window.onload = function load() {
     fetch("./data.json")
       .then(response => {
         return response.json();
