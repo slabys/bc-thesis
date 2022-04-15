@@ -2,56 +2,54 @@
 <html class="no-js" lang="cs">
 
 <head>
-  <meta charset="utf-8">
-  <title></title>
-  <meta name="description" content="Rendering large amount of data on a website">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta charset="utf-8">
+	<title></title>
+	<meta name="description" content="Rendering large amount of data on a website">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <meta property="og:title" content="MES">
-  <meta property="og:type" content="Semestral project">
-  <meta property="og:url" content="https://www.uhk.cz/cs/fakulta-informatiky-a-managementu/fim">
-  <meta property="og:image" content="https://www.uhk.cz/img/svg/logo/fim-uhk-cs_hor.svg">
-  <link rel="manifest" href="site.webmanifest">
-  <link rel="icon" href="./img/icon.png">
+	<meta property="og:title" content="MES">
+	<meta property="og:type" content="Semestral project">
+	<meta property="og:url" content="https://www.uhk.cz/cs/fakulta-informatiky-a-managementu/fim">
+	<meta property="og:image" content="https://www.uhk.cz/img/svg/logo/fim-uhk-cs_hor.svg">
+	<link rel="icon" href="./img/icon.png">
 
-  <!-- CSS -->
-  <link rel="stylesheet" href="./css/custom.css">
+	<!-- CSS -->
+	<link rel="stylesheet" href="./css/custom.css">
 </head>
 <body>
 <header>
-  <button type="button" onclick="drawTable()">Table</button>
-  <h1>Vykreslování velkého objemu dat na webu</h1>
-  <button type="button" onclick="drawCanvas()">Canvas</button>
-  <button type="button" onclick="clean()">Clean</button>
+	<button type="button" onclick="drawTable();">Table</button>
+	<button type="button" onclick="drawCSSGrid();">CSS Grid</button>
+	<h1>Vykreslování velkého objemu dat na webu</h1>
+	<button type="button" onclick="drawCanvas();">Canvas</button>
+	<button type="button" onclick="clean();">Clean</button>
 </header>
 <section>
-  <div class="parent">
-    <canvas
-      id="canvas"
-      width="100%"
-      height="100%"
-    ></canvas>
-    <div id="table"></div>
-  </div>
+	<div class="parent">
+		<canvas
+			id="canvas"
+			width="100%"
+			height="100%"
+		></canvas>
+		<div id="table"></div>
+		<div id="css-grid"></div>
+	</div>
 </section>
-  <footer>
-    <span>&copy; 2021, Slabý Šimon</span>
-  </footer>
+<footer>
+	<span>&copy; 2022, Bakalářský projekt, Slabý Šimon`</span>
+</footer>
 <script>
-    window.onload = function load() {
-    fetch("./data.json")
-      .then(response => {
-        return response.json();
-      })
-      .then(
-        //model.gridConfig.sheets[0].dataModel.data
-        model => {
-          console.log(model.gridConfig.sheets[0].dataModel)
-          defineValues(model.gridConfig.sheets[0].dataModel)
-        }
-      );
-  }
+	window.onload = function load() {
+		fetch("./data.json")
+			.then(response => response.json())
+			.then(model => {
+				// model.gridConfig.sheets[0].dataModel.data
+				console.log(model.gridConfig.sheets[0].dataModel)
+				defineValues(model.gridConfig.sheets[0].dataModel)
+			});
+
+	}
 </script>
-<script src="js/main.js"></script>
+<script type="text/javascript" src="./js/main.js"></script>
 </body>
 </html>
