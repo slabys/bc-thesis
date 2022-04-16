@@ -31,7 +31,7 @@ function clean() {
   document.getElementById("css-grid").innerHTML = '';
 
   const canvas = document.getElementById('canvas')
-  const context = canvas.getContext('webgl2')
+  const context = canvas.getContext('2d')
   context.clearRect(0, 0, canvas.width, canvas.height);
   canvas.width = 0;
   canvas.height = 0;
