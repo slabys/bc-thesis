@@ -3,7 +3,7 @@
 
 # TEAM
 
-    <Slabý Šimon> -- <Developer> -- <MES, ai3-p>
+    <Slabý Šimon> -- <Developer> -- <bc-thesis, ai3-p>
 
 # THANKS
 

@@ -7,36 +7,33 @@
 	<meta name="description" content="Rendering large amount of data on a website">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<meta property="og:title" content="MES">
-	<meta property="og:type" content="Semestral project">
+	<meta property="og:title" content="Vykreslování velkého objemu dat na webu">
+	<meta property="og:type" content="Bakalářská práce">
 	<meta property="og:url" content="https://www.uhk.cz/cs/fakulta-informatiky-a-managementu/fim">
 	<meta property="og:image" content="https://www.uhk.cz/img/svg/logo/fim-uhk-cs_hor.svg">
-	<link rel="icon" href="./img/icon.png">
+	<link rel="icon" href="./img/icon.svg">
 
 	<!-- CSS -->
 	<link rel="stylesheet" href="./css/custom.css">
 </head>
 <body>
 <header>
-	<button type="button" onclick="drawTable();">Table</button>
-	<button type="button" onclick="drawCSSGrid();">CSS Grid</button>
 	<h1>Vykreslování velkého objemu dat na webu</h1>
-	<button type="button" onclick="drawCanvas();">Canvas</button>
+  <button type="button" onclick="drawTable();">Table</button>
+  <button type="button" onclick="drawCanvas();">Canvas</button>
+  <button type="button" onclick="drawCSSGrid();">CSS Grid</button>
+  <button type="button" onclick="testingFunction();">Testing</button>
 	<button type="button" onclick="clean();">Clean</button>
 </header>
 <section>
 	<div class="parent">
-		<canvas
-			id="canvas"
-			width="100%"
-			height="100%"
-		></canvas>
+		<canvas id="canvas"></canvas>
 		<div id="table"></div>
 		<div id="css-grid"></div>
 	</div>
 </section>
 <footer>
-	<span>&copy; 2022, Bakalářský projekt, Slabý Šimon`</span>
+	<span>&copy; 2022, Bakalářská práce, Slabý Šimon</span>
 </footer>
 <script>
 	window.onload = function load() {
@@ -51,5 +48,10 @@
 	}
 </script>
 <script type="text/javascript" src="./js/main.js"></script>
+<!--
+Přesunutí částí z praktické do teoretické
+4.3 DOM elements tabulka + CSS grid
+5.2.3 GSS Grid
+-->
 </body>
 </html>

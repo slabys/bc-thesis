@@ -28,9 +28,10 @@ document.addEventListener('scroll', function () {
  */
 function clean() {
   document.getElementById("table").innerHTML = '';
+  document.getElementById("css-grid").innerHTML = '';
 
   const canvas = document.getElementById('canvas')
-  const context = canvas.getContext('2d')
+  const context = canvas.getContext('webgl2')
   context.clearRect(0, 0, canvas.width, canvas.height);
   canvas.width = 0;
   canvas.height = 0;
@@ -108,7 +109,7 @@ function drawCanvas() {
         ">";
       inside += "<text>";
       try {
-        inside += columnValue[j].e;
+        inside += columnValue[j].v;
       } catch (e) {
         inside += 'empty';
       }
@@ -175,7 +176,7 @@ function drawTable() {
     for (let j = 0; j < columnCount; j++) {
       let column = document.createElement('td');
       try {
-        column.append(columnValue[j].e);
+        column.append(columnValue[j].v);
       } catch (e) {
         column.append('empty');
       }
@@ -203,13 +204,13 @@ function drawCSSGrid() {
     gridAnchor.appendChild(gridCell)
   }
 
-  for (let i = 0; i < 5000; i++) {
+  for (let i = 0; i < rowCount; i++) {
     let row = databaseValues.data[i];
     for (let j = 0; j < columnCount; j++) {
       let gridCell = document.createElement('div');
       gridCell.style.cssText = 'text-align: center;padding: 10px 0;background-color: white;';
       try {
-        gridCell.append(row[j].e)
+        gridCell.append(row[j].v)
       } catch (e) {
         gridCell.append('empty')
       }
@@ -223,9 +224,8 @@ function drawCSSGrid() {
  * WEBGL optimalizace pro vykreslování do canvasu
  * https://developer.mozilla.org/en-US/docs/web/api/createimagebitmap
  * https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap
- * https://html.spec.whatwg.org/multipage/imagebitmap-and-animations.html
  **/
-function drawCanvasNew() {
+function testingFunction() {
   document.getElementById('canvas').style.setProperty('display', 'block')
 
   let canvas = document.getElementById('canvas');
@@ -273,7 +273,7 @@ function drawCanvasNew() {
         ">";
       inside += "<text>";
       try {
-        inside += columnValue[j].e;
+        inside += columnValue[j].v;
       } catch (e) {
         inside += 'empty';
       }
@@ -299,9 +299,6 @@ function drawCanvasNew() {
     </foreignObject>
     </svg>`;
 
-  console.log(inside)
-  console.log(table)
-  console.log(data)
   const dataToSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   dataToSVG.insertAdjacentHTML('beforeend', '<style>table, th, td {border: 1px solid black;border-collapse: collapse;}</style>')
   const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
@@ -309,22 +306,36 @@ function drawCanvasNew() {
   helperDiv.append(table)
   foreignObject.append(helperDiv)
   dataToSVG.appendChild(foreignObject);
-  console.log(dataToSVG)
+
   //https://web.archive.org/web/20160625111122/https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
-  // let DOMURL = window.URL || window.webkitURL || window;
+
   // let img = new Image();
-  // let svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-  // let url = DOMURL.createObjectURL(svg);
+  let blob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
 
+  // img.onload = function () {
+  //   createImageBitmap(blob).then(function (sprites) {
+  //     ctx.drawImage(sprites, 0, 0);
+  //   });
+  // }
+
+
+  canvas.toBlob(function () {
+    let newImg = document.createElement('img'),
+      url = URL.createObjectURL(blob);
+
+    newImg.onload = function () {
+      // no longer need to read the blob so it's revoked
+      ctx.drawImage(newImg, 0, 0);
+      URL.revokeObjectURL(url);
+    };
+
+    newImg.src = url;
+  });
+
+// Load the sprite sheet from an image file
   // Wait for the sprite sheet to load
-  // console.log({img, svg, url, DOMURL})
-  console.log('draw')
-  // img.onload = function () {}
-  createImageBitmap(dataToSVG).then(function (sprite) {
-    ctx.drawImage(sprite, 0, 0);
-    // DOMURL.revokeObjectURL(url);
-  })
-
-  // console.log({img, svg, url, DOMURL})
-  // img.src = data;
+  // console.log('draw')
+  // createImageBitmap(svg).then(function (sprite) {
+  //   ctx.drawImage(sprite, 0, 0);
+  // })
 }
