@@ -29,15 +29,6 @@ document.addEventListener('scroll', function () {
  */
 function clean() {
   document.getElementsByTagName('main')[0].innerText = ''
-  // document.getElementById("table").innerHTML = '';
-  // document.getElementById("css-grid").innerHTML = '';
-  // document.querySelectorAll(".multipleCanvas").forEach(canvas => canvas.remove())
-  //
-  // const canvas = document.getElementById('canvas')
-  // const context = canvas.getContext('2d')
-  // context.clearRect(0, 0, canvas.width, canvas.height);
-  // canvas.width = 0;
-  // canvas.height = 0;
 }
 
 
@@ -59,6 +50,48 @@ Object.size = function (obj) {
   }
   return size;
 };
+
+/*****************************************************************************************************/
+/**
+ * Způsob vybránní elementu 'table' za pomocí javascriptu ve kterém jsou následně
+ * tvořeny elementy 'tbody', 'tr' a 'td', které tímto způsobem tvoří tělo tabulky.
+ *
+ * Do jednotlivých buněk definovaných sloupcem a řádkem jsou následně přidělovány hodnoty načítané
+ * ze souboru typu JSON
+ **/
+function drawTable() {
+  let table = document.createElement('table');
+
+  let tbody = document.createElement('tbody');
+  let thead = document.createElement('thead');
+
+  let rowHead = document.createElement('tr');
+  for (let x = 0; x < columnCount; x++) {
+    let columnHead = document.createElement('th');
+    columnHead.append('value' + x)
+    rowHead.append(columnHead);
+  }
+  thead.append(rowHead)
+  table.append(thead);
+
+  for (let i = 0; i < rowCount; i++) {
+    let row = document.createElement('tr');
+    let columnValue = databaseValues.data[i];
+
+    for (let j = 0; j < columnCount; j++) {
+      let column = document.createElement('td');
+      try {
+        column.append(columnValue[j].v);
+      } catch (e) {
+        column.append('empty');
+      }
+      row.appendChild(column);
+    }
+    tbody.appendChild(row);
+  }
+  table.appendChild(tbody);
+  document.getElementsByTagName('main')[0].appendChild(table)
+}
 
 /*****************************************************************************************************/
 /**
@@ -127,48 +160,6 @@ function drawCanvas() {
 }
 
 /*****************************************************************************************************/
-/**
- * Způsob vybránní elementu 'table' za pomocí javascriptu ve kterém jsou následně
- * tvořeny elementy 'tbody', 'tr' a 'td', které tímto způsobem tvoří tělo tabulky.
- *
- * Do jednotlivých buněk definovaných sloupcem a řádkem jsou následně přidělovány hodnoty načítané
- * ze souboru typu JSON
- **/
-function drawTable() {
-  let table = document.createElement('table');
-
-  let tbody = document.createElement('tbody');
-  let thead = document.createElement('thead');
-
-  let rowHead = document.createElement('tr');
-  for (let x = 0; x < columnCount; x++) {
-    let columnHead = document.createElement('th');
-    columnHead.append('value' + x)
-    rowHead.append(columnHead);
-  }
-  thead.append(rowHead)
-  table.append(thead);
-
-  for (let i = 0; i < rowCount; i++) {
-    let row = document.createElement('tr');
-    let columnValue = databaseValues.data[i];
-
-    for (let j = 0; j < columnCount; j++) {
-      let column = document.createElement('td');
-      try {
-        column.append(columnValue[j].v);
-      } catch (e) {
-        column.append('empty');
-      }
-      row.appendChild(column);
-    }
-    tbody.appendChild(row);
-  }
-  table.appendChild(tbody);
-  document.getElementsByTagName('main')[0].appendChild(table)
-}
-
-/*****************************************************************************************************/
 
 /**
  * Vykreslování abulky za využitím CSS Grid systému
@@ -207,10 +198,10 @@ function drawCSSGrid() {
  **/
 
 function multipleCanvases() {
-  const oneCanvasRows = 100
+  const oneCanvasRows = 20
   let currentIndex = 0
 
-  for (let i = 0; i < rowCount / oneCanvasRows; i++) {
+  for (let currentCanvas = 0; currentCanvas < rowCount / oneCanvasRows; currentCanvas++) {
     let canvas = document.createElement('canvas');
     canvas.style.cssText = 'display: block;'
     let ctx = canvas.getContext('2d');
@@ -226,6 +217,7 @@ function multipleCanvases() {
     inside += '</tr></thead><tbody>';
 
     for (let i = 0; i < oneCanvasRows; i++) {
+      if (currentIndex >= rowCount) break;
       inside += '<tr>';
       let columnValue = databaseValues.data[currentIndex];
 
