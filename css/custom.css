@@ -16,8 +16,8 @@ header h1{
   text-decoration: underline gray;
 }
 header button{
-  width: 100px;
-  height: 25px;
+  min-width: 100px;
+  min-height: 25px;
   margin: 2em;
 }
 #middle{

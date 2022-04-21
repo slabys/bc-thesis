@@ -2,7 +2,7 @@
 
 let databaseValues;
 let maxRowCount = 0;
-const rowCount = 1870; //1870
+const rowCount = 11500; //1870
 const columnCount = 18;
 
 /**
@@ -13,11 +13,11 @@ function defineValues(value) {
   databaseValues = value;
   maxRowCount = Object.size(value.data);
 }
-
-//Počátek funkce Infinite scroll start
+/**
+ * Pořátek infinite scroll funkce
+ */
 document.addEventListener('scroll', function () {
-  let bottomScroll = window.scrollY + document.body.clientHeight - 21;
-
+  let bottomScroll = window.scrollY + document.body.clientHeight + 100;
   if (bottomScroll >= document.body.scrollHeight) {
     console.log('Bottom!')
   }
@@ -29,6 +29,7 @@ document.addEventListener('scroll', function () {
 function clean() {
   document.getElementById("table").innerHTML = '';
   document.getElementById("css-grid").innerHTML = '';
+  document.querySelectorAll(".multipleCanvas").forEach(canvas => canvas.remove())
 
   const canvas = document.getElementById('canvas')
   const context = canvas.getContext('2d')
@@ -63,16 +64,15 @@ Object.size = function (obj) {
  * do elementu canvas, který obsahuje element podporující vektorovou grafiku 'svg'
  **/
 function drawCanvas() {
-  document.getElementById('canvas').style.setProperty('display', 'block')
 
   let canvasAnchor = document.getElementById('canvas');
+  canvasAnchor.style.setProperty('display', 'block')
   let canvas = canvasAnchor.getContext('2d');
 
   canvasAnchor.width = (columnCount * 3.5 * 18) + (16.5 * columnCount) + columnCount * 2;
   canvasAnchor.height = ((rowCount) * 36) + 64;
 
   let inside = "<table>";
-  inside += '<caption style="display: none">This table is created in canvas by SVG and JavaScript</caption>';
   inside += '<thead><tr>';
 
   for (let x = 0; x < columnCount; x++) {
@@ -91,7 +91,6 @@ function drawCanvas() {
   inside += '</tr></thead>';
 
   for (let i = 0; i < rowCount && i < maxRowCount; i++) {
-    //Dopočítávání rozměru výšky Canvasu, pro vykreslení celé tabulky
     canvasAnchor.height = canvasAnchor.height - 0.64;
 
     inside += "<tr>";
@@ -191,7 +190,7 @@ function drawTable() {
 /*****************************************************************************************************/
 
 /**
- *
+ * Vykreslování abulky za využitím CSS Grid systému
  */
 function drawCSSGrid() {
   let gridAnchor = document.getElementById('css-grid');
@@ -221,121 +220,92 @@ function drawCSSGrid() {
 
 /*****************************************************************************************************/
 /**
- * WEBGL optimalizace pro vykreslování do canvasu
- * https://developer.mozilla.org/en-US/docs/web/api/createimagebitmap
- * https://developer.mozilla.org/en-US/docs/Web/API/ImageBitmap
+ * Optimalizace pro vykreslování více canvasů s menším počtem řádků
  **/
-function testingFunction() {
-  document.getElementById('canvas').style.setProperty('display', 'block')
 
-  let canvas = document.getElementById('canvas');
-  let ctx = canvas.getContext('2d');
+function multipleCanvases() {
+  const oneCanvasRows = 100
+  let currentIndex = 0
 
-  canvas.width = (columnCount * 3.5 * 18) + (16.5 * columnCount) + columnCount * 2;
-  canvas.height = ((rowCount) * 36) + 64;
+  for (let i = 0; i < rowCount / oneCanvasRows; i++) {
+    let canvas = document.createElement('canvas');
+    canvas.style.cssText = 'display: block;'
+    canvas.className = 'multipleCanvas'
+    let ctx = canvas.getContext('2d');
 
-  const table = document.createElement('table')
-  // table.append('<caption style="display: none">This table is created in canvas by SVG and JavaScript</caption><thead><tr>')
-  // table.insertAdjacentHTML('beforeend', '<caption>This table is created in canvas by SVG and JavaScript</caption><thead><tr>');
-  let inside = `<caption style="display: none">This table is created in canvas by SVG and JavaScript</caption><thead><tr>`;
+    canvas.width = (columnCount * 3.5 * 18) + (16.5 * columnCount) + columnCount * 2;
+    canvas.height = ((oneCanvasRows) * 36) + 16;
 
-  for (let x = 0; x < columnCount; x++) {
-    inside += "<th style='" +
-      "text-align: center;" +
-      "min-width: 4em;" +
-      "max-width: 4em;" +
-      "min-height: 16px;" +
-      "max-height: 16px;" +
-      "padding: 8px;'" +
-      ">";
-    inside += "value " + x;
-    inside += '</th>'
-  }
+    let inside = "<table>";
+    inside += '<thead><tr>';
 
-  inside += '</tr></thead>';
-
-  for (let i = 0; i < rowCount && i < maxRowCount; i++) {
-    //Dopočítávání rozměru výšky Canvasu, pro vykreslení celé tabulky
-    canvas.height = canvas.height - 0.64;
-
-    inside += "<tr>";
-    let columnValue = databaseValues.data[i];
-
-    for (let j = 0; j < columnCount; j++) {
-      inside += "" +
-        "<td style='" +
+    for (let x = 0; x < columnCount; x++) {
+      inside += "<th style='" +
         "text-align: center;" +
-        "min-width: 3.5em;" +
-        "max-width: 3.5em;" +
+        "min-width: 4em;" +
+        "max-width: 4em;" +
         "min-height: 16px;" +
         "max-height: 16px;" +
         "padding: 8px;'" +
         ">";
-      inside += "<text>";
-      try {
-        inside += columnValue[j].v;
-      } catch (e) {
-        inside += 'empty';
+      inside += "value " + x;
+      inside += '</th>'
+    }
+
+    inside += '</tr></thead><tbody>';
+
+    for (let i = 0; i < oneCanvasRows; i++) {
+      inside += "<tr>";
+      let columnValue = databaseValues.data[currentIndex];
+
+      for (let j = 0; j < columnCount; j++) {
+        inside += "" +
+          "<td style='" +
+          "text-align: center;" +
+          "min-width: 3.5em;" +
+          "max-width: 3.5em;" +
+          "min-height: 16px;" +
+          "max-height: 16px;" +
+          "padding: 8px;'" +
+          ">";
+        inside += "<text>";
+        try {
+          inside += columnValue[j].v;
+        } catch (e) {
+          inside += 'empty';
+        }
+        inside += "</text>";
+        inside += "</td>"
       }
-      inside += "</text>";
-      inside += "</td>"
+      inside += "</tr>";
+      currentIndex++
     }
-    inside += "</tr>";
+    inside += "</tbody></table>";
+
+    const data = '<svg xmlns="http://www.w3.org/2000/svg">' +
+      '<style>' +
+      'table, th, td {' +
+      'border: 1px solid black;' +
+      'border-collapse: collapse;' +
+      '}' +
+      '</style>' +
+      '<foreignObject width="100%" height="100%">' +
+      '<div xmlns="http://www.w3.org/1999/xhtml">' +
+      inside +
+      '</div>' +
+      '</foreignObject>' +
+      '</svg>';
+
+    document.body.appendChild(canvas)
+
+    let DOMURL = window.URL || window.webkitURL || window;
+    let img = new Image();
+    let svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
+    let url = DOMURL.createObjectURL(svg);
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+      DOMURL.revokeObjectURL(url);
+    }
+    img.src = url;
   }
-  // inside += "</table>";
-  table.insertAdjacentHTML('beforeend', inside)
-
-  const data = `<svg xmlns="http://www.w3.org/2000/svg">
-    <style>
-    table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-    }
-    </style>
-    <foreignObject width="100%" height="100%">
-    <div xmlns="http://www.w3.org/1999/xhtml">
-    ${inside}
-    </div>
-    </foreignObject>
-    </svg>`;
-
-  const dataToSVG = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-  dataToSVG.insertAdjacentHTML('beforeend', '<style>table, th, td {border: 1px solid black;border-collapse: collapse;}</style>')
-  const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-  const helperDiv = document.createElementNS('http://www.w3.org/1999/xhtml', 'div')
-  helperDiv.append(table)
-  foreignObject.append(helperDiv)
-  dataToSVG.appendChild(foreignObject);
-
-  //https://web.archive.org/web/20160625111122/https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Drawing_DOM_objects_into_a_canvas
-
-  // let img = new Image();
-  let blob = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
-
-  // img.onload = function () {
-  //   createImageBitmap(blob).then(function (sprites) {
-  //     ctx.drawImage(sprites, 0, 0);
-  //   });
-  // }
-
-
-  canvas.toBlob(function () {
-    let newImg = document.createElement('img'),
-      url = URL.createObjectURL(blob);
-
-    newImg.onload = function () {
-      // no longer need to read the blob so it's revoked
-      ctx.drawImage(newImg, 0, 0);
-      URL.revokeObjectURL(url);
-    };
-
-    newImg.src = url;
-  });
-
-// Load the sprite sheet from an image file
-  // Wait for the sprite sheet to load
-  // console.log('draw')
-  // createImageBitmap(svg).then(function (sprite) {
-  //   ctx.drawImage(sprite, 0, 0);
-  // })
 }
