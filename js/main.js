@@ -2,7 +2,7 @@
 
 let databaseValues;
 let maxRowCount = 0;
-const rowCount = 11500; //1870
+const rowCount = 1000; //1870
 const columnCount = 18;
 
 /**
@@ -13,11 +13,12 @@ function defineValues(value) {
   databaseValues = value;
   maxRowCount = Object.size(value.data);
 }
+
 /**
  * Pořátek infinite scroll funkce
  */
 document.addEventListener('scroll', function () {
-  let bottomScroll = window.scrollY + document.body.clientHeight + 100;
+  let bottomScroll = window.scrollY * 2 + document.body.clientHeight;
   if (bottomScroll >= document.body.scrollHeight) {
     console.log('Bottom!')
   }
@@ -27,15 +28,16 @@ document.addEventListener('scroll', function () {
  * Funkce, která vyčistí tabulku a canvas od vykreslených hodnot.
  */
 function clean() {
-  document.getElementById("table").innerHTML = '';
-  document.getElementById("css-grid").innerHTML = '';
-  document.querySelectorAll(".multipleCanvas").forEach(canvas => canvas.remove())
-
-  const canvas = document.getElementById('canvas')
-  const context = canvas.getContext('2d')
-  context.clearRect(0, 0, canvas.width, canvas.height);
-  canvas.width = 0;
-  canvas.height = 0;
+  document.getElementsByTagName('main')[0].innerText = ''
+  // document.getElementById("table").innerHTML = '';
+  // document.getElementById("css-grid").innerHTML = '';
+  // document.querySelectorAll(".multipleCanvas").forEach(canvas => canvas.remove())
+  //
+  // const canvas = document.getElementById('canvas')
+  // const context = canvas.getContext('2d')
+  // context.clearRect(0, 0, canvas.width, canvas.height);
+  // canvas.width = 0;
+  // canvas.height = 0;
 }
 
 
@@ -65,80 +67,60 @@ Object.size = function (obj) {
  **/
 function drawCanvas() {
 
-  let canvasAnchor = document.getElementById('canvas');
-  canvasAnchor.style.setProperty('display', 'block')
-  let canvas = canvasAnchor.getContext('2d');
+  let canvas = document.createElement('canvas');
+  canvas.style.cssText = 'display: block;'
+  let ctx = canvas.getContext('2d');
 
-  canvasAnchor.width = (columnCount * 3.5 * 18) + (16.5 * columnCount) + columnCount * 2;
-  canvasAnchor.height = ((rowCount) * 36) + 64;
+  canvas.width = (columnCount * 3.5 * 18) + (16.5 * columnCount) + columnCount * 2;
+  canvas.height = ((rowCount) * 36) + 64;
 
-  let inside = "<table>";
-  inside += '<thead><tr>';
-
+  let inside = '<table><thead><tr>';
   for (let x = 0; x < columnCount; x++) {
-    inside += "<th style='" +
-      "text-align: center;" +
-      "min-width: 4em;" +
-      "max-width: 4em;" +
-      "min-height: 16px;" +
-      "max-height: 16px;" +
-      "padding: 8px;'" +
-      ">";
-    inside += "value " + x;
-    inside += '</th>'
+    inside += `<th style='text-align: center; min-width: 4em; max-width: 4em; min-height: 16px; max-height: 16px; padding: 8px;'>value ${x}</th>`
   }
-
-  inside += '</tr></thead>';
+  inside += '</tr></thead><tbody>';
 
   for (let i = 0; i < rowCount && i < maxRowCount; i++) {
-    canvasAnchor.height = canvasAnchor.height - 0.64;
+    canvas.height = canvas.height - 0.64;
 
-    inside += "<tr>";
+    inside += '<tr>';
     let columnValue = databaseValues.data[i];
 
     for (let j = 0; j < columnCount; j++) {
-      inside += "" +
-        "<td style='" +
-        "text-align: center;" +
-        "min-width: 3.5em;" +
-        "max-width: 3.5em;" +
-        "min-height: 16px;" +
-        "max-height: 16px;" +
-        "padding: 8px;'" +
-        ">";
-      inside += "<text>";
+      inside += `<td style='text-align: center; min-width: 3.5em; max-width: 3.5em; min-height: 16px; max-height: 16px; padding: 8px;'><text>`
       try {
         inside += columnValue[j].v;
       } catch (e) {
         inside += 'empty';
       }
-      inside += "</text>";
-      inside += "</td>"
+      inside += '</text></td>';
     }
-    inside += "</tr>";
+    inside += '</tr>';
   }
-  inside += "</table>";
+  inside += '</tbody></table>';
 
-  const data = '<svg xmlns="http://www.w3.org/2000/svg">' +
-    '<style>' +
-    'table, th, td {' +
-    'border: 1px solid black;' +
-    'border-collapse: collapse;' +
-    '}' +
-    '</style>' +
-    '<foreignObject width="100%" height="100%">' +
-    '<div xmlns="http://www.w3.org/1999/xhtml">' +
-    inside +
-    '</div>' +
-    '</foreignObject>' +
-    '</svg>';
+  const data = `<svg xmlns="http://www.w3.org/2000/svg">
+      <style>
+        table, th, td {
+          border: 1px solid black;
+          border-collapse: collapse;
+        }
+      </style>
+      <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+          ${inside}
+        </div>
+      </foreignObject>
+    </svg>`
+
+  document.getElementsByTagName('main')[0].appendChild(canvas)
 
   let DOMURL = window.URL || window.webkitURL || window;
   let img = new Image();
   let svg = new Blob([data], {type: 'image/svg+xml;charset=utf-8'});
   let url = DOMURL.createObjectURL(svg);
   img.onload = function () {
-    canvas.drawImage(img, 0, 0);
+    ctx.drawImage(img, 0, 0);
     DOMURL.revokeObjectURL(url);
   }
   img.src = url;
@@ -153,8 +135,7 @@ function drawCanvas() {
  * ze souboru typu JSON
  **/
 function drawTable() {
-  let tableAnchor = document.getElementById('table');
-  let tbl = document.createElement('table');
+  let table = document.createElement('table');
 
   let tbody = document.createElement('tbody');
   let thead = document.createElement('thead');
@@ -166,7 +147,7 @@ function drawTable() {
     rowHead.append(columnHead);
   }
   thead.append(rowHead)
-  tbl.append(thead);
+  table.append(thead);
 
   for (let i = 0; i < rowCount; i++) {
     let row = document.createElement('tr');
@@ -183,8 +164,8 @@ function drawTable() {
     }
     tbody.appendChild(row);
   }
-  tbl.appendChild(tbody);
-  tableAnchor.appendChild(tbl);
+  table.appendChild(tbody);
+  document.getElementsByTagName('main')[0].appendChild(table)
 }
 
 /*****************************************************************************************************/
@@ -193,14 +174,14 @@ function drawTable() {
  * Vykreslování abulky za využitím CSS Grid systému
  */
 function drawCSSGrid() {
-  let gridAnchor = document.getElementById('css-grid');
-  gridAnchor.style.cssText = 'display: grid; grid-template-columns: repeat(18, 1fr); gap: 1px;background-color: black;border: 1px solid black;'
+  let cssGrid = document.createElement('div');
+  cssGrid.style.cssText = 'display: grid; grid-template-columns: repeat(18, 1fr); gap: 1px;background-color: black;border: 1px solid black;'
 
   for (let x = 0; x < columnCount; x++) {
     let gridCell = document.createElement('div');
     gridCell.style.cssText = 'text-align: center;padding: 10px 0;background-color: white;';
     gridCell.append('value' + x)
-    gridAnchor.appendChild(gridCell)
+    cssGrid.appendChild(gridCell)
   }
 
   for (let i = 0; i < rowCount; i++) {
@@ -213,9 +194,11 @@ function drawCSSGrid() {
       } catch (e) {
         gridCell.append('empty')
       }
-      gridAnchor.appendChild(gridCell)
+      cssGrid.appendChild(gridCell)
     }
   }
+
+  document.getElementsByTagName('main')[0].appendChild(cssGrid)
 }
 
 /*****************************************************************************************************/
@@ -230,73 +213,51 @@ function multipleCanvases() {
   for (let i = 0; i < rowCount / oneCanvasRows; i++) {
     let canvas = document.createElement('canvas');
     canvas.style.cssText = 'display: block;'
-    canvas.className = 'multipleCanvas'
     let ctx = canvas.getContext('2d');
 
     canvas.width = (columnCount * 3.5 * 18) + (16.5 * columnCount) + columnCount * 2;
     canvas.height = ((oneCanvasRows) * 36) + 16;
 
-    let inside = "<table>";
-    inside += '<thead><tr>';
+    let inside = '<table><thead><tr>';
 
     for (let x = 0; x < columnCount; x++) {
-      inside += "<th style='" +
-        "text-align: center;" +
-        "min-width: 4em;" +
-        "max-width: 4em;" +
-        "min-height: 16px;" +
-        "max-height: 16px;" +
-        "padding: 8px;'" +
-        ">";
-      inside += "value " + x;
-      inside += '</th>'
+      inside += `<th style='text-align: center; min-width: 4em; max-width: 4em; min-height: 16px; max-height: 16px; padding: 8px;'>value ${x}</th>`
     }
-
     inside += '</tr></thead><tbody>';
 
     for (let i = 0; i < oneCanvasRows; i++) {
-      inside += "<tr>";
+      inside += '<tr>';
       let columnValue = databaseValues.data[currentIndex];
 
       for (let j = 0; j < columnCount; j++) {
-        inside += "" +
-          "<td style='" +
-          "text-align: center;" +
-          "min-width: 3.5em;" +
-          "max-width: 3.5em;" +
-          "min-height: 16px;" +
-          "max-height: 16px;" +
-          "padding: 8px;'" +
-          ">";
-        inside += "<text>";
+        inside += `<td style="text-align: center; min-width: 3.5em; max-width: 3.5em; min-height: 16px; max-height: 16px; padding: 8px;"><text>`
         try {
           inside += columnValue[j].v;
         } catch (e) {
           inside += 'empty';
         }
-        inside += "</text>";
-        inside += "</td>"
+        inside += '</text></td>';
       }
-      inside += "</tr>";
+      inside += '</tr>';
       currentIndex++
     }
     inside += "</tbody></table>";
 
-    const data = '<svg xmlns="http://www.w3.org/2000/svg">' +
-      '<style>' +
-      'table, th, td {' +
-      'border: 1px solid black;' +
-      'border-collapse: collapse;' +
-      '}' +
-      '</style>' +
-      '<foreignObject width="100%" height="100%">' +
-      '<div xmlns="http://www.w3.org/1999/xhtml">' +
-      inside +
-      '</div>' +
-      '</foreignObject>' +
-      '</svg>';
+    const data = `<svg xmlns="http://www.w3.org/2000/svg">
+        <style>
+          table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+          }
+        </style>
+        <foreignObject width="100%" height="100%">
+          <div xmlns="http://www.w3.org/1999/xhtml">
+            ${inside}
+          </div>
+        </foreignObject>
+      </svg>`
 
-    document.body.appendChild(canvas)
+    document.getElementsByTagName('main')[0].appendChild(canvas)
 
     let DOMURL = window.URL || window.webkitURL || window;
     let img = new Image();
