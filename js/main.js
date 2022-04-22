@@ -2,8 +2,16 @@
 
 let databaseValues;
 let maxRowCount = 0;
-const rowCount = 11500; //1870
+const rowCount = 1000; //max 1870 pro canvas
 const columnCount = 18;
+
+let infiniteScrollCSSGrid = false;
+let infiniteScrollHTMLTable = false;
+
+function setInfiniteScrollCSSGrid (value) {
+  infiniteScrollCSSGrid = value;
+  drawCSSGridInfiniteScroll()
+}
 
 /**
  * Funkce, která za pomocí hodnoty value přiřadí prvky do proměnné a určí maximální počet řádků, které jsou obsaženy v objektu.
@@ -17,10 +25,10 @@ function defineValues(value) {
 /**
  * Infinite scroll posluchač, který zajištuje postupné načítání dat při scrollování uživatelem směrem ke koneci dokumentu
  */
-document.addEventListener('scroll', function () {
+document.addEventListener('scroll', async function () {
   let bottomScroll = window.scrollY * 2 + document.body.clientHeight;
   if (bottomScroll >= document.body.scrollHeight) {
-    console.log('Bottom!')
+    if(infiniteScrollCSSGrid && currentCSSGridRowIndexScroll < rowCount) await drawCSSGridInfiniteScroll()
   }
 });
 
@@ -158,7 +166,7 @@ function drawCanvas() {
 /*****************************************************************************************************/
 
 /**
- * Vykreslování abulky za využitím CSS Grid systému
+ * Vykreslování tabulky za využitím CSS Grid systému
  */
 function drawCSSGrid() {
   let cssGrid = document.createElement('div');
@@ -257,4 +265,42 @@ function multipleCanvases() {
     }
     img.src = url;
   }
+}
+
+
+/*****************************************************************************************************/
+
+/**
+ * Vykreslování tabulky za využitím CSS Grid systému za využití infinite scroll
+ */
+let currentCSSGridRowIndexScroll = 0;
+let rowCountPerRenderCSSGrid = 100;
+
+function drawCSSGridInfiniteScroll() {
+  let cssGrid = document.createElement('div');
+  cssGrid.style.cssText = 'display: grid; grid-template-columns: repeat(18, 1fr); gap: 1px;background-color: black;border: 1px solid black;'
+
+  for (let x = 0; x < columnCount; x++) {
+    let gridCell = document.createElement('div');
+    gridCell.style.cssText = 'text-align: center;padding: 10px 0;background-color: white;';
+    gridCell.append('value' + x)
+    cssGrid.appendChild(gridCell)
+  }
+
+  for (let i = 0; i < rowCountPerRenderCSSGrid && i < rowCount; i++) {
+    let row = databaseValues.data[currentCSSGridRowIndexScroll];
+    for (let j = 0; j < columnCount; j++) {
+      let gridCell = document.createElement('div');
+      gridCell.style.cssText = 'text-align: center;padding: 10px 0;background-color: white;';
+      try {
+        gridCell.append(row[j].v)
+      } catch (e) {
+        gridCell.append('empty')
+      }
+      cssGrid.appendChild(gridCell)
+    }
+    currentCSSGridRowIndexScroll++
+  }
+
+  document.getElementsByTagName('main')[0].appendChild(cssGrid)
 }

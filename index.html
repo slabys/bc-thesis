@@ -18,11 +18,14 @@
 <body>
 <header>
 	<h2>Vykreslování velkého objemu dat na webu</h2>
-  <button type="button" onclick="drawTable();">Table</button>
-  <button type="button" onclick="drawCanvas();">Canvas</button>
-  <button type="button" onclick="drawCSSGrid();">CSS Grid</button>
-  <button type="button" onclick="multipleCanvases();">Multiple Canvases</button>
-	<button type="button" onclick="clean();">Clean</button>
+	<div class="buttons">
+		<button type="button" onclick="drawTable();">Table</button>
+		<button type="button" onclick="drawCanvas();">Canvas</button>
+		<button type="button" onclick="drawCSSGrid();">CSS Grid</button>
+		<button type="button" onclick="multipleCanvases();">Multiple Canvases</button>
+		<button type="button" onclick="setInfiniteScrollCSSGrid(true);">CSS Grid infinite scroll</button>
+		<button type="button" onclick="clean();">Clean</button>
+	</div>
 </header>
 <main></main>
 <footer>
