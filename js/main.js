@@ -2,7 +2,7 @@
 
 let databaseValues;
 let maxRowCount = 0;
-const rowCount = 1000; //max 1870 pro canvas
+const rowCount = 11500; //max 1870 pro canvas
 const columnCount = 18;
 
 let infiniteScrollCSSGrid = false;
@@ -280,7 +280,7 @@ function multipleCanvases() {
  * Vykreslování tabulky za využitím CSS Grid systému za využití infinite scroll
  */
 let currentCSSGridRowIndexScroll = 0;
-let rowCountPerRenderCSSGrid = 100;
+let rowCountPerRenderCSSGrid = 500;
 
 function drawCSSGridInfiniteScroll() {
   let cssGrid = document.createElement('div');
@@ -316,7 +316,7 @@ function drawCSSGridInfiniteScroll() {
  * Vykreslování HTML tabulky, která je automaticky připojována k HTML dokumentu v závislosti na scrollování uživatele
  **/
 let currentHTMLTableRowIndexScroll = 0;
-let rowCountPerRenderHTMLTable = 100;
+let rowCountPerRenderHTMLTable = 500;
 
 function drawHTMLTableInfiniteScroll() {
   let table = document.createElement('table');
