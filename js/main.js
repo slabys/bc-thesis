@@ -2,7 +2,7 @@
 
 let databaseValues;
 let maxRowCount = 0;
-const rowCount = 1000; //1870
+const rowCount = 11500; //1870
 const columnCount = 18;
 
 /**
@@ -15,7 +15,7 @@ function defineValues(value) {
 }
 
 /**
- * Pořátek infinite scroll funkce
+ * Infinite scroll posluchač, který zajištuje postupné načítání dat při scrollování uživatelem směrem ke koneci dokumentu
  */
 document.addEventListener('scroll', function () {
   let bottomScroll = window.scrollY * 2 + document.body.clientHeight;
@@ -31,15 +31,11 @@ function clean() {
   document.getElementsByTagName('main')[0].innerText = ''
 }
 
-
 /*****************************************************************************************************/
 
 /**
  * Vlastní metoda, která pomáhá třídě "Object" ve zjištění její délky, která je následně využívána
- * pro dosazování jednotlivých buněk do tabulky
- *
- * Momentálně není využívaná, byla využívaná v předchozí implementaci, či pro zjištění nepevného počtu
- * sloupců v řádku (Ztrácí význam kvůli pevnému počtu)
+ * pro definování finálního čísla počtu řádků v načteném souboru
  * @param obj
  * @returns {number}
  */
@@ -198,7 +194,7 @@ function drawCSSGrid() {
  **/
 
 function multipleCanvases() {
-  const oneCanvasRows = 20
+  const oneCanvasRows = 500
   let currentIndex = 0
 
   for (let currentCanvas = 0; currentCanvas < rowCount / oneCanvasRows; currentCanvas++) {

@@ -29,11 +29,15 @@
 	<span>&copy; 2022, Bakalářská práce, Slabý Šimon</span>
 </footer>
 <script>
+	/**
+	 * Funkce load je volána při načtení dokumentu, čímž jsou načtený data z "model.gridConfig.sheets[0].dataModel.data",
+	 * následně je volána funkce "defineValues", která přiřadí do nových proměnných data a maximální počet řádků obsažených
+	 * v dokumentu typu JSON. Víme, že počet sloupců je vždy neměnná hodnota.
+	 */
 	window.onload = function load() {
 		fetch("./data.json")
 			.then(response => response.json())
 			.then(model => {
-				// model.gridConfig.sheets[0].dataModel.data
 				console.log(model.gridConfig.sheets[0].dataModel)
 				defineValues(model.gridConfig.sheets[0].dataModel)
 			});
