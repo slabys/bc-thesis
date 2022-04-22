@@ -313,11 +313,7 @@ function drawCSSGridInfiniteScroll() {
 
 /*****************************************************************************************************/
 /**
- * Způsob vybránní elementu 'table' za pomocí javascriptu ve kterém jsou následně
- * tvořeny elementy 'tbody', 'tr' a 'td', které tímto způsobem tvoří tělo tabulky.
- *
- * Do jednotlivých buněk definovaných sloupcem a řádkem jsou následně přidělovány hodnoty načítané
- * ze souboru typu JSON
+ * Vykreslování HTML tabulky, která je automaticky připojována k HTML dokumentu v závislosti na scrollování uživatele
  **/
 let currentHTMLTableRowIndexScroll = 0;
 let rowCountPerRenderHTMLTable = 100;
