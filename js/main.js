@@ -8,9 +8,14 @@ const columnCount = 18;
 let infiniteScrollCSSGrid = false;
 let infiniteScrollHTMLTable = false;
 
-function setInfiniteScrollCSSGrid (value) {
+function setInfiniteScrollCSSGrid(value) {
   infiniteScrollCSSGrid = value;
   drawCSSGridInfiniteScroll()
+}
+
+function setInfiniteScrollHTMLTable(value) {
+  infiniteScrollHTMLTable = value;
+  drawHTMLTableInfiniteScroll()
 }
 
 /**
@@ -26,9 +31,10 @@ function defineValues(value) {
  * Infinite scroll posluchač, který zajištuje postupné načítání dat při scrollování uživatelem směrem ke koneci dokumentu
  */
 document.addEventListener('scroll', async function () {
-  let bottomScroll = window.scrollY * 2 + document.body.clientHeight;
-  if (bottomScroll >= document.body.scrollHeight) {
-    if(infiniteScrollCSSGrid && currentCSSGridRowIndexScroll < rowCount) await drawCSSGridInfiniteScroll()
+  let bottomScroll = window.scrollY + document.body.clientHeight / 2;
+  if (bottomScroll >= document.body.clientHeight) {
+    if (infiniteScrollCSSGrid && currentCSSGridRowIndexScroll < rowCount) await drawCSSGridInfiniteScroll()
+    if (infiniteScrollHTMLTable && currentHTMLTableRowIndexScroll < rowCount) await drawHTMLTableInfiniteScroll()
   }
 });
 
@@ -113,7 +119,7 @@ function drawCanvas() {
 
   let inside = '<table><thead><tr>';
   for (let x = 0; x < columnCount; x++) {
-    inside += `<th style='text-align: center; min-width: 4em; max-width: 4em; min-height: 16px; max-height: 16px; padding: 8px;'>value ${x}</th>`
+    inside += `<th style="text-align: center; min-width: 4em; max-width: 4em; min-height: 16px; max-height: 16px; padding: 8px;">value ${x}</th>`
   }
   inside += '</tr></thead><tbody>';
 
@@ -124,7 +130,7 @@ function drawCanvas() {
     let columnValue = databaseValues.data[i];
 
     for (let j = 0; j < columnCount; j++) {
-      inside += `<td style='text-align: center; min-width: 3.5em; max-width: 3.5em; min-height: 16px; max-height: 16px; padding: 8px;'><text>`
+      inside += `<td style="text-align: center; min-width: 3.5em; max-width: 3.5em; min-height: 16px; max-height: 16px; padding: 8px;"><text>`
       try {
         inside += columnValue[j].v;
       } catch (e) {
@@ -216,7 +222,7 @@ function multipleCanvases() {
     let inside = '<table><thead><tr>';
 
     for (let x = 0; x < columnCount; x++) {
-      inside += `<th style='text-align: center; min-width: 4em; max-width: 4em; min-height: 16px; max-height: 16px; padding: 8px;'>value ${x}</th>`
+      inside += `<th style="text-align: center; min-width: 4em; max-width: 4em; min-height: 16px; max-height: 16px; padding: 8px;">value ${x}</th>`
     }
     inside += '</tr></thead><tbody>';
 
@@ -303,4 +309,50 @@ function drawCSSGridInfiniteScroll() {
   }
 
   document.getElementsByTagName('main')[0].appendChild(cssGrid)
+}
+
+/*****************************************************************************************************/
+/**
+ * Způsob vybránní elementu 'table' za pomocí javascriptu ve kterém jsou následně
+ * tvořeny elementy 'tbody', 'tr' a 'td', které tímto způsobem tvoří tělo tabulky.
+ *
+ * Do jednotlivých buněk definovaných sloupcem a řádkem jsou následně přidělovány hodnoty načítané
+ * ze souboru typu JSON
+ **/
+let currentHTMLTableRowIndexScroll = 0;
+let rowCountPerRenderHTMLTable = 100;
+
+function drawHTMLTableInfiniteScroll() {
+  let table = document.createElement('table');
+
+  let tbody = document.createElement('tbody');
+  let thead = document.createElement('thead');
+
+  let rowHead = document.createElement('tr');
+  for (let x = 0; x < columnCount; x++) {
+    let columnHead = document.createElement('th');
+    columnHead.append('value' + x)
+    rowHead.append(columnHead);
+  }
+  thead.append(rowHead)
+  table.append(thead);
+
+  for (let i = 0; i < rowCountPerRenderHTMLTable && i < rowCount; i++) {
+    let row = document.createElement('tr');
+    let columnValue = databaseValues.data[currentHTMLTableRowIndexScroll];
+
+    for (let j = 0; j < columnCount; j++) {
+      let column = document.createElement('td');
+      try {
+        column.append(columnValue[j].v);
+      } catch (e) {
+        column.append('empty');
+      }
+      row.appendChild(column);
+    }
+    tbody.appendChild(row);
+    currentHTMLTableRowIndexScroll++;
+  }
+  table.appendChild(tbody);
+  document.getElementsByTagName('main')[0].appendChild(table)
 }
